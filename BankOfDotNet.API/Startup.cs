@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BankOfDotNet.API.Data;
+using Microsoft.IdentityModel.Tokens;
 
 namespace BankOfDotNet.API
 {
@@ -27,6 +28,18 @@ namespace BankOfDotNet.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication("Bearer")
+                .AddJwtBearer("Bearer", option =>
+                {
+                    option.Authority = "http://localhost:5000";
+                    option.RequireHttpsMetadata = false;
+                    option.Audience = "bankOfDotNetApi";
+                    option.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidateAudience = false
+                    };
+                });
+
             services.AddDbContext<BankOfDotNetAPIContext>(opts => opts.UseInMemoryDatabase("BankingDB"));
             services.AddControllers();
 
@@ -43,6 +56,8 @@ namespace BankOfDotNet.API
             }
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

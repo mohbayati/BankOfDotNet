@@ -18,7 +18,7 @@ namespace BankOfDotNet.IdentitySvr
         {
             services.AddIdentityServer()
                 .AddDeveloperSigningCredential()
-                //.AddInMemoryApiResources(Config.GetAllApiResources())
+                .AddInMemoryApiResources(Config.GetAllApiResources())
                 .AddInMemoryApiScopes(Config.GetAllApiScope())
                 .AddInMemoryClients(Config.GetClients());
         }
