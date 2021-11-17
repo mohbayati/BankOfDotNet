@@ -13,6 +13,28 @@ namespace BankOfDotNet.ConsoleClient
 
         private static async Task MainAsync()
         {
+
+            var client = new HttpClient();
+            var response = await client.RequestPasswordTokenAsync(new PasswordTokenRequest
+            {
+                Address = "http://localhost:5000/connect/token",
+
+                ClientId = "ro.client",
+                ClientSecret = "secret",
+                Scope = "bankOfDotNetApi",
+
+                UserName= "moh",
+                Password= "password"
+            });
+
+            Console.WriteLine(response.AccessToken);
+
+            Console.ReadLine();
+            //await ClientCredentialFlow();
+        }
+
+        private static async Task ClientCredentialFlow()
+        {
             //discover all endpoint using metadata of identity server
             var client = new HttpClient();
 
@@ -36,9 +58,9 @@ namespace BankOfDotNet.ConsoleClient
 
             var comstomInfo = new StringContent(JsonConvert.SerializeObject(
                     new { Id = 10, FirstName = "Moh", LastName = "bay" }),
-                    Encoding.UTF8,"application/json") ;
+                    Encoding.UTF8, "application/json");
 
-            var postresponse=client.PostAsync("http://localhost:35554/api/Customers", comstomInfo);
+            var postresponse = client.PostAsync("http://localhost:35554/api/Customers", comstomInfo);
             var getresponse = client.GetAsync("http://localhost:35554/api/Customers");
 
             Console.WriteLine(await getresponse.Result.Content.ReadAsStringAsync());
