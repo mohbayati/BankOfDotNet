@@ -22,6 +22,7 @@ namespace BankOfDotNet.IdentitySvr
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            
             services.AddMvc(opt => opt.EnableEndpointRouting = false);
 
             var config = new ConfigurationBuilder()
@@ -29,11 +30,13 @@ namespace BankOfDotNet.IdentitySvr
                 .AddJsonFile("appsettings.json",false)
                 .Build();
 
+
             //var connectionString = config.GetSection("DefaultConnection").Value;
 
             var migrationAssembley = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
 
-            const string connectionString = @"Data Source=.\\SQLEXPRESS;database=IdentityServer4.Quickstart.EntityFramework-2.0.0;trusted_connection=yes;";
+            const string connectionString = @"Data Source=.\SQLEXPRESS;database=IdentityServer4.Quickstart.EntityFramework-4.0.0;trusted_connection=yes;";
+
 
 
             services.AddIdentityServer()
@@ -76,13 +79,13 @@ namespace BankOfDotNet.IdentitySvr
             app.UseIdentityServer();
             app.UseMvcWithDefaultRoute();
             // this will do the initial DB population
-            InitializeDatabase(app);
+            //InitializeDatabase(app);
         }
         private void InitializeDatabase(IApplicationBuilder app)
         {
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
-                serviceScope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>().Database.Migrate();
+                serviceScope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>().Database.Migrate(); 
 
                 var context = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
                 context.Database.Migrate();
